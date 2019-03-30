@@ -1,0 +1,27 @@
+SRCS = arm_alarm_id_register.c		\
+	   snmp_device_register.c		\
+	   sunwave_alarm.c				\
+	   sunwave_normal.c				\
+	   sunwave_oid.c				\
+	   sunwave_slave_device_list.c	\
+	   table/alarm_id_table.c		\
+	   snmp_register_test.c
+PROJECT = snmp_register_test
+
+GCC = gcc
+
+LIB = -lm -lpthread -lcmockery
+
+INCLUDE = -I./
+
+CFLAGS = -DUNIT_TESTING -DSNMP_DEVICE_REGISTER -DARM_ALARM_ID_REGISTER
+CFLAG = -Wall 
+
+OBJS=$(patsubst %.c,%.o,$(SRCS))
+
+$(PROJECT):$(OBJS)
+	@ $(GCC) -o $@ $^ $(CFLAG) $(CFLAGS) $(LIB)
+	@ du -b $(PROJECT)
+	
+%.o:%.c
+	$(GCC) -c $(CFLAG) $(CFLAGS) $(INCLUDE) -o $@ $< 

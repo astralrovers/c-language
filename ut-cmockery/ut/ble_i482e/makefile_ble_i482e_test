@@ -1,0 +1,22 @@
+SRCS = i482e.c		\
+	   i482e_extern.c		\
+	   ble_i482e_test.c
+PROJECT = ble_i482e_test
+
+GCC = gcc
+
+LIB = -lm -lpthread -lcmockery
+
+INCLUDE = -I./
+
+CFLAGS = -DUNIT_TESTING
+CFLAG = -Wall 
+
+OBJS=$(patsubst %.c,%.o,$(SRCS))
+
+$(PROJECT):$(OBJS)
+	@ $(GCC) -o $@ $^ $(CFLAG) $(CFLAGS) $(LIB)
+	@ du -b $(PROJECT)
+	
+%.o:%.c
+	$(GCC) -c $(CFLAG) $(CFLAGS) $(INCLUDE) -o $@ $< 

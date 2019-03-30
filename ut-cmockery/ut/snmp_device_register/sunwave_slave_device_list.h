@@ -1,0 +1,6 @@
+#ifndef __SUNWAVE_SLAVE_DEVICE_LIST_H__
+#define __SUNWAVE_SLAVE_DEVICE_LIST_H__
+#ifdef SNMP_DEVICE_REGISTER
+#endif
+
+#endif

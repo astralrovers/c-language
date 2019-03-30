@@ -1,0 +1,23 @@
+SRCS = ftp_download_file.c  \
+	   ftp_protocol.c  \
+	   slv_dev_ftp_download_test.c
+#SRCS = slv_dev_ftp_download_test.c
+PROJECT = slv_dev_ftp_download_test
+
+GCC = gcc
+
+LIB = -lm -lpthread -lcmockery
+
+INCLUDE = -I./
+
+CFLAGS = -DUNIT_TESTING -DFTP_DEBUG -DUT_FTP_DBG
+CFLAG = -Wall 
+
+OBJS=$(patsubst %.c,%.o,$(SRCS))
+
+$(PROJECT):$(OBJS)
+	@ $(GCC) -o $@ $^ $(CFLAG) $(CFLAGS) $(LIB)
+	@ du -b $(PROJECT)
+	
+%.o:%.c
+	$(GCC) -c $(CFLAG) $(CFLAGS) $(INCLUDE) -o $@ $< 

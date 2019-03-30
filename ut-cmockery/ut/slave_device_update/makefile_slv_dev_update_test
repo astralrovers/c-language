@@ -1,0 +1,23 @@
+SRCS = ftp_normal_update.c  \
+	   ftp_webkey_update.c  \
+	   slv_dev_update_test.c
+
+PROJECT = slv_dev_update_test
+
+GCC = gcc
+
+LIB = -lm -lpthread -lcmockery
+
+INCLUDE = -I./
+
+CFLAGS = -DUNIT_TESTING
+CFLAG = -Wall 
+
+OBJS=$(patsubst %.c,%.o,$(SRCS))
+
+$(PROJECT):$(OBJS)
+	@ $(GCC) -o $@ $^ $(CFLAG) $(CFLAGS) $(LIB)
+	@ du -b $(PROJECT)
+	
+%.o:%.c
+	$(GCC) -c $(CFLAG) $(CFLAGS) $(INCLUDE) -o $@ $< 
