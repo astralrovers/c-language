@@ -256,6 +256,16 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 
 ## <a id="inttypes">inttypes</a>
 
+> 定义了一组与系统无关的定长字节数据类型:
+> `int8_t`
+> `uint8_t`
+> `int16_t`
+> `uint16_t`
+> `int32_t`
+> `uint32_t`
+> `int64_t`
+> `uint64_t`
+
 ## <a id="iso646">iso646</a>
 
 ## <a id="limits">limits</a>
@@ -263,6 +273,35 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 ## <a id="math">math</a>
 
 ## <a id="setjmp">setjmp</a>
+
+### 作用
+
+> 相当于距离更远的`goto`，能够在函数之间跳转
+
+### 头文件
+
+> `<setjmp.h>`
+
+### 函数
+
+> 只有一个数据类型和两个函数
+
+- `jmp_buf`:
+  使用之前必须定义它，并且要定义成全局变量，不过最好是定义成文件私有
+  `static jmp_buf env`
+
+- `int setjmp(jmp_buf env);`，使用跳转已之前必须先调用，第一次调用返回0，之后的返回值由`longjmp()`传递
+  ```c
+  if (setjmp(env))
+  {
+    return 0;
+  }
+  ```
+
+- `void longjmp(jmp_buf env, int val);`，长跳转函数，`val`是我们传递的参数，调用它之后，函数会跳转到`setjmp`处执行，返回值就是`val`
+  ```c
+  longjmp(env, 2);
+  ```
 
 ## <a id="signal">signal</a>
 

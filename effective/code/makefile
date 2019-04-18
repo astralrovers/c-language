@@ -4,7 +4,8 @@ SRC = main.c \
 	  use\#.c \
 	  about_assert.c \
 	  about_ctype.c \
-	  about_errno.c
+	  about_errno.c \
+	  about_jmp.c
 
 OBJS = $(patsubst %.c,%.o,$(SRC))
 #sinclude $(SRC:.c=.d)
