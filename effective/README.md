@@ -31,6 +31,8 @@
 
 # <a id="special-grammar-sum">特殊语法总结</a>
 
+代码参考`code/use#.c`和`code/three_point.c`
+
 ## <a id="used-of-3">关于#和##的用法</a>
 
 ### \#的用法
@@ -124,6 +126,8 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 
 
 # <a id="std-lib-c">标准库</a>
+
+代码参考`code/about_xxx.c`
 
 > 摘自《C99标准》
 
@@ -270,6 +274,40 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 
 ## <a id="limits">limits</a>
 
+### 作用
+
+> 整数类型的大小限制
+
+### 头文件
+
+> `<limits.h>`
+
+### 内容
+
+| 宏         | 说明                                                         | 取值                                    |
+| ---------- | ------------------------------------------------------------ | --------------------------------------- |
+| CHAR_BIT   | char 类型所包含的位（Bit）数。                               | 大于等于 8，一般为 8                    |
+| SCHAR_MIN  | signed char 类型所能表示的最小值                             | 小于等于-127 (-27+1)，一般为 -127       |
+| SCHAR_MAX  | signed char 类型所能表示的最大值                             | 大于等于 127 (27-1)，一般为 127         |
+| UCHAR_MAX  | unsigned char 类型所能表示的最大值                           | 大于等于 255 (28-1)，一般为 255         |
+| CHAR_MIN   | char 类型所能表示的最小值                                    | 要么是 0，要么是 SCHAR_MIN              |
+| CHAR_MAX   | char 类型所能表示的最大值                                    | 要么是 SCHAR_MAX，要么是 UCHAR_MAX      |
+| MB_LEN_MAX | 一个多字节字符最多能包含多少个字节（多字节字符和宽字符是相对的） | 大于等于 1                              |
+| SHRT_MIN   | short int 类型所能表示的最小值                               | 小于等于 -32767 (-215+1)，一般是 -32767 |
+| SHRT_MAX   | short int 类型所能表示的最大值                               | 大于等于 32767 (215-1)，一般是 32767    |
+| USHRT_MAX  | unsigned short int 类型所能表示的最大值                      | 大于等于 65535 (216-1)，一般是 65535    |
+| INT_MIN    | int 类型所能表示的最小值                                     | 小于等于 -32767 (-215+1)                |
+| INT_MAX    | int 类型所能表示的最大值                                     | 大于等于 32767 (215-1)                  |
+| UINT_MAX   | unsigned int 类型所能表示的最大值                            | 大于等于 65535 (216-1)                  |
+| LONG_MIN   | long int 类型所能表示的最小值                                | 小于等于 -2147483647 (-231+1)           |
+| LONG_MAX   | long int 类型所能表示的最大值                                | 大于等于 2147483647 (231-1)             |
+| ULONG_MAX  | unsigned long int 类型所能表示的最大值                       | 大于等于 4294967295 (232-1)             |
+| LLONG_MIN  | long long int 类型所能表示的最小值                           | 小于等于 -9223372036854775807 (-263+1)  |
+| LLONG_MAX  | long long int 类型所能表示的最大值                           | 大于等于 9223372036854775807 (263-1)    |
+| ULLONG_MAX | unsigned long long int 类型所能表示的最大值                  | 大于等于 18446744073709551615 (264-1)   |
+
+
+
 ## <a id="math">math</a>
 
 ## <a id="setjmp">setjmp</a>
@@ -307,11 +345,118 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 
 ## <a id="stdarg">stdarg</a>
 
+### 作用
+
+> 主要是用来获取可变参数函数的参数列表的。
+
+### 头文件
+
+> `<stdarg.h>`
+
+### 函数或宏
+
+`va` --> `variable-argument`
+
+**下面的函数都是宏**
+
+
+- 这里之定义了一个数据类型`va_list`，获取参数列表必须通过这个类型的变量
+- `void va_start(va_list ap, last);`:
+  用于初始化`ap`，`last`很明显是传入的第一个参数，不过传参是通过压栈的，所以`last`在栈底，所以取名为`last`，用于确定参数列表的最后一个参数
+- `type va_arg(va_list ap, type);`：
+  根据传入的类型，返回参数列表里对应的参数，**注意：这里取参数是根据传参顺序来取的，即从`last`参数后面一个开始取**
+- `void va_end(va_list ap);`：
+  结束可变参数的获取。
+- `void va_copy(va_list dest, va_list src);`，自己猜吧。
+
+一个例子
+```c
+#include <stdarg.h>
+#include <stdio.h>
+
+static void print_one_arg(int last, ...)
+{
+    va_list ap;
+    va_start(ap, last);
+    int ret_int = va_arg(ap, int);
+    va_end(ap);
+
+    printf("about_args >> %s, last = [%d], one_arg = [%d]\n", __func__, last, ret_int);
+    return (void)0;
+}
+
+static void my_print(const char * fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    printf("aboute_stdarg >> my_print : ");
+    vprintf(fmt, ap);
+    va_end(ap);
+
+    return (void)0;
+}
+
+void stdarg_test(void)
+{
+    print_one_arg(20, 30);
+    my_print("hello name = [%s] age = [%d]\n", "ywl", 24);
+
+    return (void)0;
+}
+
+
+```
+
 ## <a id="stdbool">stdbool</a>
+
+### 作用
+
+> 新增的`bool`类型，不用自定义了，更加方便
+
+### 头文件
+
+> `<stdbool.h>`
+
+### 函数或宏
+
+一个类型，两个宏
+
+- `bool`类型 --> `_Bool`，他的值只能为0，1
+- `true`真
+- `false`假
 
 ## <a id="stddef">stddef</a>
 
+### 作用
+
+> 定义了许多变量和宏，许多头文件也会包含它
+
+### 头文件
+
+> `<stddef.h>`
+
+### 函数或宏
+
+重要的几个
+
+- `ptrdiff_t`：有符号整型，常用来表示两个指针的相减的结果:
+  ```c
+  int head_t = 9;
+  int tail_t = 90;
+
+  int * head = &head_t;
+  int * tail = &tail_t;
+
+  ptrdiff_t diff = tail - head;
+  ```
+
+- `size_t`：无符号整型，`sizeof`的结果，打印有专用符号`%zu`，其实用`%ld`也可以
+- `NULL`：空指针常量的值
+- `size_t offsetof(type, member);`：返回值为`size_t`类型常量，大小为结构体成员相对结构体首地址的偏移量
+
 ## <a id="stdint">stdint</a>
+
+关于`for (unsigned int i = 1; i >= 0; --i);`，这行代码永远不会退出，没必要尽量不要用无符号整型表示该数值非负数，使用判断来保证，像这种临界点的比较十分危险。
 
 ## <a id="stdio">stdio</a>
 
@@ -329,3 +474,4 @@ int second_arry[] = { [0 ... 5] = 1, [6] = 2, [7 ... 10] = 3, [11] = 90 };
 
 # <a id="extern-gnuc">`GNUC`扩展</a>
 
+代码参考`code/gnu_c_extern.c`

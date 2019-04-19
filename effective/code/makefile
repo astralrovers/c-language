@@ -5,7 +5,8 @@ SRC = main.c \
 	  about_assert.c \
 	  about_ctype.c \
 	  about_errno.c \
-	  about_jmp.c
+	  about_jmp.c \
+	  about_stdarg.c
 
 OBJS = $(patsubst %.c,%.o,$(SRC))
 #sinclude $(SRC:.c=.d)

@@ -12,6 +12,7 @@ extern void assert_test(void);
 extern void ctype_test(void);
 extern void errno_test(void);
 extern void setjmp_test(void);
+extern void stdarg_test(void);
 
 int main(void)
 {
@@ -21,6 +22,7 @@ int main(void)
     RUN_TEST(ctype_test);
     RUN_TEST(errno_test);
     RUN_TEST(setjmp_test);
+    RUN_TEST(stdarg_test);
 
     return 0;
 }
